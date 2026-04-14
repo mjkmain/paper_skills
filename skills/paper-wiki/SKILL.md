@@ -1,11 +1,22 @@
 ---
 name: paper-wiki
 description: "Build and maintain a persistent research wiki that synthesizes individual paper notes into an interlinked knowledge base of concept pages, comparisons, and gap analyses. The wiki compounds — every new paper makes it smarter. Use when user says 'build wiki', 'update wiki', 'wiki query', 'lint wiki', 'wiki status', 'synthesize papers', 'what do I know about [topic]', 'add to wiki', 'integrate papers', or wants to turn paper notes into organized, permanent knowledge. Also trigger when the user has just finished reading papers with paper-reader and wants the next step, when they ask about connections between papers, research gaps, or field overviews, or when they want to maintain their research knowledge base."
-argument-hint: [subcommand: init|build|update|query|lint|status] [options]
+argument-hint: "[subcommand: init|build|update|query|lint|status] [options]"
 allowed-tools: Bash(*), Read, Write, Edit, Glob, Grep, Agent
 ---
 
 # Paper Wiki: Persistent Research Knowledge Base
+
+| Field | Value |
+|-------|-------|
+| **Name** | `paper-wiki` |
+| **Description** | Build and maintain a persistent research wiki from paper notes. |
+| **Argument** | <code>[subcommand: init&#124;build&#124;update&#124;query&#124;lint&#124;status] [options]</code> |
+| **Allowed Tools** | Bash, Read, Write, Edit, Glob, Grep, Agent |
+| **Input** | Paper notes in `./reference/notes/` (from `paper-reader`) |
+| **Output** | Wiki pages, graph, and log in `./wiki/` |
+| **Prev Skill** | `paper-reader` — supplies the structured notes this skill synthesizes |
+| **Next Skill** | `topic-literature` — produce surveys, briefs, and gap reports from the wiki |
 
 Subcommand: **$ARGUMENTS**
 
@@ -113,6 +124,16 @@ Each entry links to its page using `[[wikilinks]]`.
 Append to `log.md`: build summary with counts.
 Report to user: papers processed, concepts created, comparisons created, edge count.
 
+**Suggest next step.** After reporting, point the user at `topic-literature` — the wiki is now ready to produce deliverables:
+
+```
+Wiki is built. Next, produce something from it:
+  /topic-literature survey "<topic>"       — field survey from concept pages
+  /topic-literature brief "<question>"     — focused 1-2 page synthesis
+  /topic-literature reading-list "<topic>" — curated reading order
+  /topic-literature gaps                   — research gaps + loop-back /paper-collector queries
+```
+
 ---
 
 ### `/paper-wiki update` [short_name]
@@ -174,6 +195,15 @@ Append to `log.md`:
 ```
 
 Report to user with a summary. Highlight any contradictions or interesting new connections.
+
+**Suggest next step.** When new papers have been integrated, point the user at `topic-literature` for producing deliverables from the refreshed wiki, or back to `paper-collector` to fill gaps:
+
+```
+Wiki updated. Next:
+  /topic-literature gaps                    — see what's still missing
+  /topic-literature survey "<topic>"        — refresh a survey with new evidence
+  /paper-collector "<gap-query>"            — chase a gap surfaced by `gaps`
+```
 
 ---
 

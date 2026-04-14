@@ -1,7 +1,7 @@
 ---
 name: paper-collector
-description: Search, download, and organize research papers by topic. Use when user says "collect papers", "download papers", "find papers on [topic]", "get papers about [topic]".
-argument-hint: [topic] — sources: web|conference — max: N — year: YYYY-
+description: "Search, download, and organize research papers by topic. Use when user says 'collect papers', 'download papers', 'find papers on [topic]', 'get papers about [topic]'."
+argument-hint: "[topic] - sources: web|conference — max: N — year: YYYY-"
 allowed-tools: Bash(*), Read, Write, Edit, Glob, Grep, WebSearch, WebFetch, Agent
 ---
 
@@ -11,8 +11,9 @@ allowed-tools: Bash(*), Read, Write, Edit, Glob, Grep, WebSearch, WebFetch, Agen
 |-------|-------|
 | **Name** | `paper-collector` |
 | **Description** | Search, download, and organize research papers by topic. |
-| **Argument** | `[topic] — sources: web\|conference — max: N — year: YYYY-` |
+| **Argument** | <code>[topic] — sources: web&#124;conference — max: N — year: YYYY-</code> |
 | **Allowed Tools** | Bash, Read, Write, Edit, Glob, Grep, WebSearch, WebFetch, Agent |
+| **Input** | Topic string, optional `sources`, `max`, `year` |
 | **Output** | PDFs in `./reference/`, updated `./reference/index.md` |
 | **Next Skill** | `paper-reader` — generate structured notes from collected papers |
 

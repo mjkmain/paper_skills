@@ -5,13 +5,20 @@ Claude Code skills and tools for building a research second-brain. Collect paper
 ## Pipeline
 
 ```
-paper-collector          paper-reader            (planned)
-   Search & download  -->  Read & digest PDFs  -->  research-wiki
-   papers by topic        into structured notes     research-query
-                                                    paper-linker
+paper-collector  -->  paper-reader  -->  paper-wiki  -->  topic-literature
+  Search & download     Read & digest      Synthesize         Produce surveys,
+  papers by topic       PDFs into          notes into a       briefs, reading
+                        structured notes   wiki + graph       lists, gap reports
+                                                                     |
+                                            <----- loop-back --------+
+                                           (gaps emit /paper-collector queries)
 ```
 
-All skills share a common workspace: `./reference/` for PDFs, `./reference/notes/` for markdown notes, and `./reference/index.md` as the catalog.
+Shared workspace:
+- `./reference/` — PDFs (`paper-collector` writes, `paper-reader` reads)
+- `./reference/notes/` — markdown notes (`paper-reader` writes, `paper-wiki` reads)
+- `./reference/index.md` — catalog
+- `./wiki/` — synthesized knowledge (`paper-wiki` owns; `topic-literature` reads + writes to `./wiki/reviews/`)
 
 ## Skills
 
@@ -88,11 +95,15 @@ python3 tools/arxiv_fetch.py make-filename --short-name "bert" --authors "Jacob 
 paper_skills/
   skills/
     paper-collector/
-      SKILL.md              # Skill definition
+      SKILL.md               # Skill definition
     paper-reader/
-      SKILL.md              # Skill definition
+      SKILL.md               # Skill definition
+    paper-wiki/
+      SKILL.md               # Skill definition
+    topic-literature/
+      SKILL.md               # Skill definition
   tools/
-    arxiv_fetch.py           # arXiv search + download + naming
+    arxiv_fetch.py            # arXiv search + download + naming
     semantic_scholar_fetch.py # Semantic Scholar API search
 ```
 
@@ -104,8 +115,35 @@ paper_skills/
 
 No `pip install` needed — all tools use Python stdlib only.
 
+## Additional Skills
+
+### paper-wiki
+
+Build and maintain an interlinked research wiki from paper notes. Concept pages synthesize across papers; a JSONL graph tracks relationships.
+
+```
+/paper-wiki init          # bootstrap ./wiki/
+/paper-wiki build         # first full build from ./reference/notes/
+/paper-wiki update        # incremental — integrate newly read papers
+/paper-wiki query "..."   # ask the wiki; optionally --save the answer
+/paper-wiki lint          # health-check for orphans, thin concepts, broken links
+/paper-wiki status        # quick state summary
+```
+
+### topic-literature
+
+Produce topic-level deliverables from the wiki.
+
+```
+/topic-literature survey "<topic>"         # comprehensive field survey
+/topic-literature brief "<question>"       # focused 1-2 page synthesis
+/topic-literature reading-list "<topic>"   # curated reading order
+/topic-literature related-work "<focus>"   # academic-format related work section
+/topic-literature gaps                     # research gap report + paper-collector queries
+```
+
+The `gaps` subcommand emits copy-pasteable `/paper-collector` queries, closing the pipeline loop.
+
 ## Planned Skills
 
-- **research-wiki** — Build an interlinked wiki from paper notes (following the [LLM-wiki](https://github.com/tobi/llm-wiki) pattern)
-- **paper-linker** — Discover relationships between papers, generate a gap map
-- **research-query** — Ask questions against the wiki, synthesize answers with citations
+- **graph-creator** — Render `wiki/graph/` via Graphify / Obsidian graph view for visual exploration

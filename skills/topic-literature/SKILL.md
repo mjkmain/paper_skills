@@ -1,11 +1,22 @@
 ---
 name: topic-literature
 description: "Produce topic-level research deliverables — surveys, briefs, reading lists, research gap reports, and related work sections — from the wiki's synthesized knowledge. Works at the TOPIC level: primary data source is wiki concept pages (already synthesized across papers), not individual paper notes. Use when user says 'write a survey', 'survey on', 'literature survey', 'brief me on', 'what should I read about', 'reading list for', 'write related work', 'position my work', 'what are the gaps', 'research opportunities', 'frontier', 'what's missing', or wants to produce a deliverable document from their accumulated research knowledge. Also trigger when the user wants a structured document about a research topic, asks for a literature review, needs to write a related work section, or wants strategic guidance on what to investigate next."
-argument-hint: [subcommand: survey|brief|reading-list|related-work|gaps] [options]
+argument-hint: "[subcommand: survey|brief|reading-list|related-work|gaps] [options]"
 allowed-tools: Bash(*), Read, Write, Edit, Glob, Grep, Agent
 ---
 
 # Topic Literature: Produce Deliverables from Research Knowledge
+
+| Field | Value |
+|-------|-------|
+| **Name** | `topic-literature` |
+| **Description** | Produce surveys, briefs, reading lists, related-work sections, and gap reports from the wiki. |
+| **Argument** | <code>[subcommand: survey&#124;brief&#124;reading-list&#124;related-work&#124;gaps] [options]</code> |
+| **Allowed Tools** | Bash, Read, Write, Edit, Glob, Grep, Agent |
+| **Input** | Wiki pages in `./wiki/` (from `paper-wiki`); paper notes as secondary source |
+| **Output** | Deliverables in `./wiki/reviews/`, updated `wiki/index.md` and `wiki/log.md` |
+| **Prev Skill** | `paper-wiki` — supplies the concept pages, graph, and overview this skill reads from |
+| **Loop-Back** | `gaps` subcommand emits copy-pasteable `/paper-collector` queries, closing the pipeline |
 
 Subcommand: **$ARGUMENTS**
 
@@ -521,6 +532,14 @@ Both modes build citations from paper note frontmatter (`title`, `authors`, `yea
   [1] Lin, Z., Gou, Z., et al. (2024). "Rho-1: Not All Tokens Are What You Need."
       NeurIPS 2024. arXiv: 2404.07965.
   ```
+
+## Next Step
+
+After producing any deliverable, suggest a natural follow-up based on what was made:
+
+- After `survey`, `brief`, or `reading-list` → point at `/topic-literature gaps` to see what the deliverable revealed is missing, and at `/paper-wiki update` if new papers have been read since the wiki was last built.
+- After `related-work` → remind the user to sanity-check positioning claims against the actual contribution; suggest `/topic-literature gaps` if they want to strengthen the "what's missing" angle.
+- After `gaps` → the report already contains `/paper-collector` queries. Offer to run the top-priority one directly, which restarts the pipeline (`collector → reader → paper-wiki update → topic-literature`).
 
 ## Key Rules
 

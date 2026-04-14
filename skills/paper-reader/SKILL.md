@@ -1,7 +1,7 @@
 ---
 name: paper-reader
-description: Read and digest research papers from ./reference/, extract key ideas, and produce structured notes. Use when user says "read papers", "summarize papers", "digest papers", "what do these papers say", "make notes from papers".
-argument-hint: [filename|topic|"all"] — depth: skim|standard|deep
+description: "Read and digest research papers from ./reference/, extract key ideas, and produce structured notes. Use when user says 'read papers', 'summarize papers', 'digest papers', 'what do these papers say', 'make notes from papers'."
+argument-hint: "[filename|topic|'all'] - depth: skim|standard|deep"
 allowed-tools: Bash(*), Read, Write, Edit, Glob, Grep, Agent
 ---
 
@@ -11,10 +11,12 @@ allowed-tools: Bash(*), Read, Write, Edit, Glob, Grep, Agent
 |-------|-------|
 | **Name** | `paper-reader` |
 | **Description** | Read and digest research papers, extract key ideas, produce structured notes. |
-| **Argument** | `[filename\|topic\|"all"] — depth: skim\|standard\|deep — force: true` |
+| **Argument** | <code>[filename&#124;topic&#124;"all"] — depth: skim&#124;standard&#124;deep — force: true</code> |
 | **Allowed Tools** | Bash, Read, Write, Edit, Glob, Grep, Agent |
 | **Input** | PDFs in `./reference/` (from `paper-collector`) |
 | **Output** | Markdown notes in `./reference/notes/`, updated `./reference/index.md` |
+| **Prev Skill** | `paper-collector` — supplies the PDFs this skill digests |
+| **Next Skill** | `paper-wiki` — synthesize notes into concept pages and a research graph |
 
 Target: $ARGUMENTS
 
@@ -256,10 +258,30 @@ Update `./reference/index.md`:
    Would you like to:
    - Re-read any paper at a different depth? (e.g. "re-read mamba at deep")
    - Edit any note? (e.g. "edit vit relevance section")
-   - Continue to the next step? (e.g. build wiki, link papers)
+   - Continue to the next step? (see "Next Step" below)
    ```
 
    Wait for user response. If the user requests edits, apply them to the note files. If the user wants to re-read at a different depth, go back to Step 2 for that paper with `force: true`.
+
+## Next Step
+
+After notes are reviewed, suggest integrating them into the research wiki so that knowledge compounds across papers instead of sitting isolated in per-paper notes. Branch on wiki state:
+
+- **If `./wiki/` does not exist**: suggest
+  ```
+  /paper-wiki init
+  /paper-wiki build
+  ```
+  to bootstrap the wiki from the notes just written.
+- **If `./wiki/` already exists**: suggest
+  ```
+  /paper-wiki update
+  ```
+  to integrate the new papers into the existing concept pages and graph.
+
+Optionally mention follow-ups after the wiki is updated:
+- `/topic-literature survey "<topic>"` — produce a field survey across the new + existing papers
+- `/topic-literature gaps` — surface research gaps and get back copy-pasteable `/paper-collector` queries, closing the loop
 
 ## Key Rules
 
