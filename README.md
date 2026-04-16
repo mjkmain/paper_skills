@@ -112,6 +112,17 @@ paper_skills/
 1. Clone this repo
 2. Python 3.10+ required
 3. (Optional) Set `SEMANTIC_SCHOLAR_API_KEY` for higher rate limits
+4. Copy skills and tools into your Claude Code configuration:
+
+```bash
+# Global install (available in all projects)
+cp -r skills/* ~/.claude/skills/
+cp -r tools/* ~/.claude/tools/
+
+# OR project-level install (available only in that project)
+cp -r skills/* /path/to/your/project/.claude/skills/
+cp -r tools/* /path/to/your/project/.claude/tools/
+```
 
 No `pip install` needed — all tools use Python stdlib only.
 
